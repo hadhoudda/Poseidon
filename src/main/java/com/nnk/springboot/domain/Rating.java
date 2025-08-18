@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 @Table(name = "rating")
 public class Rating {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ou AUTO, selon la stratégie
-    private Long id;
-    // TODO: Map columns in data table RATING with corresponding java fields
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+    private String moodysRating;
+    private String sandPRating;
+    private String fitchRating;
+    private Integer orderNumber;
 }
