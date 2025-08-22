@@ -2,6 +2,8 @@ package com.nnk.springboot.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.sql.Timestamp;
 
@@ -13,7 +15,11 @@ public class CurvePoint {
     private Integer id;
     private Integer curveId;
     private Timestamp asOfDate;
+    @NotNull(message = "Term Quantity is required")
+    @PositiveOrZero(message = "Term must be zero or positive")
     private Double term;
+    @NotNull(message = "Value Quantity is required")
+    @PositiveOrZero(message = "Value must be zero or positive")
     private Double value;
     private Timestamp creationDate;
 
