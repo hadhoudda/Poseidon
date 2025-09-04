@@ -82,4 +82,9 @@ public class BidListController {
         model.addAttribute("bidLists", bidListRepository.findAll());
         return "redirect:/bidList/list";
     }
+
+    @ModelAttribute("remoteUser")
+    public Object remoteUser(final HttpServletRequest httpServletRequest) {
+        return httpServletRequest.getRemoteUser();
+    }
 }

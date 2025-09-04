@@ -2,9 +2,7 @@ package com.nnk.springboot;
 
 import com.nnk.springboot.model.RuleName;
 import com.nnk.springboot.repositories.RuleNameRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+z
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
