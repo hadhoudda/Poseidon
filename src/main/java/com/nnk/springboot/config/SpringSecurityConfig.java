@@ -38,6 +38,7 @@ public class SpringSecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(mvcRequestMatcher.pattern("/css/**")).permitAll()
+                        .requestMatchers(mvcRequestMatcher.pattern("/app/error")).permitAll()
                         .requestMatchers(mvcRequestMatcher.pattern("/user/**")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -49,7 +50,7 @@ public class SpringSecurityConfig {
                         .logoutUrl("/app-logout")
                 )
                 .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/access-denied") // Redirection en cas d'accès refusé
+                        .accessDeniedPage("/app/error") // Redirection en cas d'accès refusé
                 )
                 .authenticationProvider(daoAuthProvider)
                 .build();
