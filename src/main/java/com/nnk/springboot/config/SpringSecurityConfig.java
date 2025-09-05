@@ -48,6 +48,9 @@ public class SpringSecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/app-logout")
                 )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/access-denied") // Redirection en cas d'accès refusé
+                )
                 .authenticationProvider(daoAuthProvider)
                 .build();
     }
