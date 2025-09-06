@@ -3,6 +3,7 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.model.BidList;
 import com.nnk.springboot.model.Trade;
 import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.services.contracts.ITradeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class TradeController {
     @Autowired
-    TradeRepository tradeRepository;
+    ITradeService iTradeService;
 
     @RequestMapping("/trade/list")
     public String home(Model model)
     {
-        model.addAttribute("trades", tradeRepository.findAll());
+        model.addAttribute("trades", iTradeService.getAllTrades());
         return "trade/list";
     }
 
@@ -34,13 +35,13 @@ public class TradeController {
         if (result.hasErrors()) {
             return "trade/add";
         }
-        tradeRepository.save(trade);
+        iTradeService.saveTrade(trade);
         return "redirect:/trade/list";
     }
 
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        Trade trade = tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Trade Id:" + id));
+        Trade trade = iTradeService.findTradeById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Trade Id:" + id));
         model.addAttribute("trade", trade);
         return "trade/update";
     }
@@ -53,7 +54,7 @@ public class TradeController {
         }
 
         // On récupère le trade existant
-        Trade existingTrade = tradeRepository.findById(id)
+        Trade existingTrade = iTradeService.findTradeById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid trade ID: " + id));
 
         // Mise à jour des champs modifiables
@@ -61,7 +62,7 @@ public class TradeController {
         existingTrade.setType(trade.getType());
         existingTrade.setBuyQuantity(trade.getBuyQuantity());
 
-        tradeRepository.save(existingTrade);
+        iTradeService.saveTrade(existingTrade);
 
         return "redirect:/trade/list";
     }
@@ -69,10 +70,10 @@ public class TradeController {
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
         // On récupère le trade existant
-        Trade existingTrade = tradeRepository.findById(id)
+        Trade existingTrade = iTradeService.findTradeById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid trade ID: " + id));
-        tradeRepository.delete(existingTrade);
-        model.addAttribute("trades", tradeRepository.findAll());
+        iTradeService.deleteTradeById(existingTrade.getTradeId());
+        model.addAttribute("trades", iTradeService.getAllTrades());
         return "redirect:/trade/list";
     }
 

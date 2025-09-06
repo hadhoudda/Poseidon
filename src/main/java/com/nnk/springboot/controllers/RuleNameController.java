@@ -3,6 +3,7 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.model.BidList;
 import com.nnk.springboot.model.RuleName;
 import com.nnk.springboot.repositories.RuleNameRepository;
+import com.nnk.springboot.services.contracts.IRuleNameService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class RuleNameController {
     @Autowired
-    RuleNameRepository ruleNameRepository;
+    IRuleNameService iRuleNameService;
 
     @RequestMapping("/ruleName/list")
     public String home(Model model)
     {
-        model.addAttribute("ruleNames", ruleNameRepository.findAll());
+        model.addAttribute("ruleNames", iRuleNameService.getAllRuleNames());
         return "ruleName/list";
     }
 
@@ -34,13 +35,13 @@ public class RuleNameController {
         if (result.hasErrors()) {
             return "ruleName/add";
         }
-        ruleNameRepository.save(ruleName);
+        iRuleNameService.saveRuleName(ruleName);
         return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        RuleName ruleName = ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid RuleName Id:" + id));
+        RuleName ruleName = iRuleNameService.findRuleNameById(id).orElseThrow(() -> new IllegalArgumentException("Invalid RuleName Id:" + id));
         model.addAttribute("ruleName", ruleName);
         return "ruleName/update";
     }
@@ -53,7 +54,7 @@ public class RuleNameController {
         }
 
         // On récupère le RuleName existant
-        RuleName existingRuleName = ruleNameRepository.findById(id)
+        RuleName existingRuleName = iRuleNameService.findRuleNameById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid RuleName ID: " + id));
 
         // Mise à jour des champs modifiables
@@ -64,17 +65,17 @@ public class RuleNameController {
         existingRuleName.setSqlStr(ruleName.getSqlStr());
         existingRuleName.setSqlPart(ruleName.getSqlPart());
 
-        ruleNameRepository.save(existingRuleName);
+        iRuleNameService.saveRuleName(existingRuleName);
         return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
         // On récupère le RuleName existant
-        RuleName existingRuleName = ruleNameRepository.findById(id)
+        RuleName existingRuleName = iRuleNameService.findRuleNameById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid RuleName ID: " + id));
-        ruleNameRepository.delete(existingRuleName);
-        model.addAttribute("ruleNames", ruleNameRepository.findAll());
+        iRuleNameService.deleteRuleNameById(existingRuleName.getId());
+        model.addAttribute("ruleNames", iRuleNameService.getAllRuleNames());
         return "redirect:/ruleName/list";
     }
 

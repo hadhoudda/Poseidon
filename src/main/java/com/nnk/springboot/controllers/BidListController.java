@@ -1,28 +1,24 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.model.BidList;
-import com.nnk.springboot.model.User;
-import com.nnk.springboot.repositories.BidListRepository;
+import com.nnk.springboot.services.contracts.IBidListService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
 
 @Controller
 public class BidListController {
     @Autowired
-    private BidListRepository bidListRepository;
+    private IBidListService iBidListService;
 
     @RequestMapping("/bidList/list")
     public String home(Model model) {
-        model.addAttribute("bidLists", bidListRepository.findAll());
+        model.addAttribute("bidLists", iBidListService.getAllBidLists());
         return "bidList/list";
     }
 
@@ -37,13 +33,13 @@ public class BidListController {
         if (result.hasErrors()) {
             return "bidList/add";
         }
-        bidListRepository.save(bid);
+        iBidListService.saveBidList(bid);
         return "redirect:/bidList/list";
     }
 
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        BidList bidList = bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
+        BidList bidList = iBidListService.findBidListById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
         model.addAttribute("bidList", bidList);
             return "bidList/update";
     }
@@ -59,7 +55,7 @@ public class BidListController {
         }
 
         // On récupère le BidList existant
-        BidList existingBid = bidListRepository.findById(id)
+        BidList existingBid = iBidListService.findBidListById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid BidList ID: " + id));
 
         // Mise à jour des champs modifiables
@@ -67,7 +63,7 @@ public class BidListController {
         existingBid.setType(bidList.getType());
         existingBid.setBidQuantity(bidList.getBidQuantity());
 
-        bidListRepository.save(existingBid);
+        iBidListService.saveBidList(existingBid);
 
         return "redirect:/bidList/list";
     }
@@ -76,10 +72,10 @@ public class BidListController {
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         // On récupère le BidList existant
-        BidList existingBid = bidListRepository.findById(id)
+        BidList existingBid = iBidListService.findBidListById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid BidList ID: " + id));
-        bidListRepository.delete(existingBid);
-        model.addAttribute("bidLists", bidListRepository.findAll());
+        iBidListService.deleteBidListById(existingBid.getBidListId());
+        model.addAttribute("bidLists", iBidListService.getAllBidLists());
         return "redirect:/bidList/list";
     }
 

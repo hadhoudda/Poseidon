@@ -1,6 +1,7 @@
 package com.nnk.springboot.config;
 
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,33 +32,33 @@ public class SpringSecurityConfig {
         return new MvcRequestMatcher.Builder(handlerMappingIntrospector);
     }
 
-
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, DaoAuthenticationProvider daoAuthProvider, MvcRequestMatcher.Builder mvcRequestMatcher) throws Exception {
-        return httpSecurity
+    public SecurityFilterChain filterChain(HttpSecurity http, DaoAuthenticationProvider daoAuthProvider,
+                                           MvcRequestMatcher.Builder mvc) throws Exception {
+        return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(mvcRequestMatcher.pattern("/css/**")).permitAll()
-                        .requestMatchers(mvcRequestMatcher.pattern("/app/error")).permitAll()
-                        .requestMatchers(mvcRequestMatcher.pattern("/user/**")).hasRole("ADMIN")
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                        .requestMatchers(mvc.pattern("/css/**")).permitAll()
+                        .requestMatchers("/app/error").permitAll()
+                        .requestMatchers(mvc.pattern("/user")).hasRole("ADMIN")
+                        .requestMatchers(mvc.pattern("/user/**")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
-                        .defaultSuccessUrl("/bidList/list")
+                        .defaultSuccessUrl("/bidList/list", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/app-logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/app/error") // Redirection en cas d'accès refusé
+                .exceptionHandling(exc -> exc
+                        .accessDeniedPage("/app/error")  // redirection sur erreur accessDenied
                 )
                 .authenticationProvider(daoAuthProvider)
                 .build();
     }
-
-
-
 
 
     @Bean
@@ -68,9 +69,6 @@ public class SpringSecurityConfig {
     }
 
 
-    /**
-     * Fournisseur d'authentification basé sur les détails de l'utilisateur (customUserDetailsService).
-     */
     @Bean
     public DaoAuthenticationProvider daoAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -79,9 +77,4 @@ public class SpringSecurityConfig {
         return provider;
     }
 
-
-
 }
-
-
-
