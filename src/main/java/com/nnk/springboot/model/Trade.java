@@ -39,6 +39,15 @@ public class Trade {
     private String sourceListId;
     private String side;
 
+    public Trade(String account, String type, Double buyQuantity) {
+        this.account = account;
+        this.type = type;
+        this.buyQuantity = buyQuantity;
+    }
+
+    public Trade() {
+    }
+
     public Integer getTradeId() {
         return tradeId;
     }

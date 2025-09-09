@@ -39,12 +39,14 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                         .requestMatchers(mvc.pattern("/css/**")).permitAll()
+                        .requestMatchers("/app/login").permitAll()
                         .requestMatchers("/app/error").permitAll()
                         .requestMatchers(mvc.pattern("/user")).hasRole("ADMIN")
                         .requestMatchers(mvc.pattern("/user/**")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
+                        .loginPage("/app/login")
                         .defaultSuccessUrl("/bidList/list", true)
                         .permitAll()
                 )

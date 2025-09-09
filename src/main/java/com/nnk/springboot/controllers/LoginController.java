@@ -28,11 +28,15 @@ public class LoginController {
      *
      * @return login view
      */
+//    @GetMapping("login")
+//    public ModelAndView login() {
+//        logger.info("Accessing login page");
+//        ModelAndView mav = new ModelAndView("login");
+//        return mav;
+//    }
     @GetMapping("login")
-    public ModelAndView login() {
-        logger.info("Accessing login page");
-        ModelAndView mav = new ModelAndView("login");
-        return mav;
+    public String login() {
+        return "login";
     }
 
     /**
