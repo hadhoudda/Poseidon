@@ -22,7 +22,6 @@ public class BidList {
     @NotNull(message = "Bid Quantity is required")
     @PositiveOrZero(message = "Bid Quantity must be zero or positive")
     private Double bidQuantity;
-
     private Double askQuantity;
     private Double bid;
     private Double ask;

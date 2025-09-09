@@ -1,27 +1,67 @@
-# spring-boot
+
+# Poseidon
+# Poseidon Trading Application
+
+Poseidon is a trading application designed to manage and monitor trading activities. It offers features such as bid management, curve point handling, ratings, rule configuration, trade tracking, and user management.
+
 ## Technical:
 
 1. Spring Boot 3.1.0
-2. Java 17
-3. Thymeleaf
-4. Bootstrap v.4.3.1
+2. Spring Security
+3. Java 21
+4. Thymeleaf
+5. Bootstrap
 
 
-## Setup with Intellij IDE
-1. Create project from Initializr: File > New > project > Spring Initializr
-2. Add lib repository into pom.xml
-3. Add folders
-    - Source root: src/main/java
-    - View: src/main/resources
-    - Static: src/main/resource/static
-4. Create database with name "demo" as configuration in application.properties
-5. Run sql script to create table doc/data.sql
+## Table of Contents
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Database Setup](#database-setup)
+- [Running Tests](#running-tests)
 
-## Implement a Feature
-1. Create mapping domain class and place in package com.nnk.springboot.domain
-2. Create repository class and place in package com.nnk.springboot.repositories
-3. Create controller class and place in package com.nnk.springboot.controllers
 
-## Security
-1. Create user service to load user from  database and place in package com.nnk.springboot.services
-2. Add configuration class and place in package com.nnk.springboot.config
+## Installation
+
+To install the application, follow these steps:
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/hadhoudda/Poseidon
+    ```
+2. Navigate to the project directory:
+    ```sh
+    cd poseidon
+    ```
+3. Build the project using Maven:
+    ```sh
+    mvn clean install
+    ```
+
+## Configuration
+
+Configure the application by modifying the `application.properties` and `application-test.properties` files located in the `src/main/resources` directory. These files contain settings for database connections, logging, and other configurations.
+
+## Usage
+
+To run the application, use the following command:
+
+```sh
+mvn spring-boot:run
+```
+The application will be available at http://localhost:8080.
+
+## Database Setup
+Create database with name "demo" as configuration in application.properties 
+
+```sh
+spring.datasource.url=jdbc:mysql://localhost:3306/demo?serverTimezone=UTC
+
+```
+Ensure your database server is running and accessible.
+
+## Running Tests
+To run the tests, use the following command:
+```sh
+mvn test
+```
